@@ -1,0 +1,25 @@
+Print initial account balances
+Account: 1234 	Name: Mike 	Balance:	1000.0
+Account: 2345 	Name: Adam 	Balance:	2000.0
+Account: 3456 	Name: Linda 	Balance:	3000.0
+Account: 4567 	Name: John 	Balance:	4000.0
+Account: 5678 	Name: Rami 	Balance:	5000.0
+Account: 6789 	Name: Lee 	Balance:	6000.0
+Account: 7890 	Name: Tom 	Balance:	7000.0
+Account: 8901 	Name: Lisa 	Balance:	8000.0
+Account: 9012 	Name: Sam 	Balance:	9000.0
+Account: 4321 	Name: Ted 	Balance:	10000.0
+Depositor and Withdrawal threads have been created
+Print final account balances after all the child thread terminated...
+Account: 1234 	Name: Mike 	Balance:	-2551150.0
+Account: 2345 	Name: Adam 	Balance:	-5738250.0
+Account: 3456 	Name: Linda 	Balance:	-9.854542E7
+Account: 4567 	Name: John 	Balance:	-40050.0
+Account: 5678 	Name: Rami 	Balance:	8.091582E7
+Account: 6789 	Name: Lee 	Balance:	-6.454611E7
+Account: 7890 	Name: Tom 	Balance:	353490.0
+Account: 8901 	Name: Lisa 	Balance:	-500310.0
+Account: 9012 	Name: Sam 	Balance:	-2.448152E7
+Account: 4321 	Name: Ted 	Balance:	1.0001E8
+Elapsed time in milliseconds 44
+Elapsed time in seconds is 0.044
