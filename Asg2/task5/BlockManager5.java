@@ -49,9 +49,15 @@ public class BlockManager5
 	/**
 	 * s2 is for use in conjunction with Thread.turnTestAndSet() for phase II proceed
 	 * in the thread creation order
+	 * Modified: Declare semaphore.
 	 */
 	private static Semaphore s2 = new Semaphore(1);
 
+	// Keeps track of the number of threads that completed phase1
+	private static int phase1Counter = 0;
+
+	// Added: Keeps track of the number of threads that completed phase2
+	private static int phase2Counter = 0;
 
 	// The main()
 	public static void main(String[] argv)
@@ -145,6 +151,7 @@ public class BlockManager5
 
 	/**
 	 * Inner AcquireBlock thread class.
+	 * Modified: use semaphore s2 to ensure that threads start in the order of their TID
 	 */
 	static class AcquireBlock extends BaseThread
 	{
@@ -156,7 +163,7 @@ public class BlockManager5
 
 		public void run()
 		{
-			mutex.P(); // Wait if any thread is executing the critical section
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			System.out.println("AcquireBlock thread [TID=" + this.iTID + "] starts executing.");
 
 
@@ -193,32 +200,46 @@ public class BlockManager5
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V(); // Release the lock
+				mutex.V(); // Release the lock for phase1
+
+				// Print message if all threads have completed phase1
+				phase1Counter++;
+				if (phase1Counter == 10) {
+					System.out.println("--------------All the threads have finished PHASE I.--------------");
+				}
 			}
 
-			s1.V();
-			s1.P();
-			s1.V();
-			s2.P();   // allow just one thread
+			s1.V(); //Increment s1
+			s1.P(); // Wait for thread to be available for phase2
+			s1.V(); // All threads have completed phase1
+
+			s2.P(); // Wait for phase2 to be available
+
+			// Test if it is the thread's turn
 			while (!turnTestAndSet()){
-				System.out.println("thread: "+ this.iTID + " has attempted but waiting for its turn to finish PHASE II");
-				s2.V(); // notify
-				s2.P(); // and wait
-			}
-			try{
-				phase2();
-			}finally {
-				s2.V(); // notify other threads
+				s2.V(); // Not it's turn and will notify another thread to test
+				System.out.println("Thread: " + this.iTID + " has attempted but waiting for its turn to finish PHASE II.");
+				s2.P(); // Wait for phase 2 to be available again
 			}
 
+			phase2();
+				
+			s2.V(); // Release the lock for phase2
 
 			System.out.println("AcquireBlock thread [TID=" + this.iTID + "] terminates.");
+
+			// Print message if all threads have completed phase2
+			phase2Counter++;
+			if (phase2Counter == 10) {
+				System.out.println("--------------All the threads have finished PHASE II.--------------");
+			}
 		}
 	} // class AcquireBlock
 
 
 	/**
 	 * Inner class ReleaseBlock.
+	 * Modified: use semaphore s2 to ensure that threads start in the order of their TID
 	 */
 	static class ReleaseBlock extends BaseThread
 	{
@@ -229,7 +250,7 @@ public class BlockManager5
 
 		public void run()
 		{
-			mutex.P();
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			System.out.println("ReleaseBlock thread [TID=" + this.iTID + "] starts executing.");
 
 
@@ -267,36 +288,52 @@ public class BlockManager5
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V();
-			}
-			s1.V();
-			s1.P();
-			s1.V();
-			s2.P();
-			while (!turnTestAndSet()){
-				s2.V();
-				System.out.println("thread: "+ this.iTID + " has attempted but waiting for its turn to finish PHASE II");
-				s2.P();
-			}
-			try{
-				phase2();
-			}finally {
-				s2.V();
+				mutex.V(); // Release the lock for phase1
+
+				// Print message if all threads have completed phase1
+				phase1Counter++;
+				if (phase1Counter == 10) {
+					System.out.println("--------------All the threads have finished PHASE I.--------------");
+				}
 			}
 
+			s1.V(); //Increment s1
+			s1.P(); // Wait for thread to be available for phase2
+			s1.V(); // All threads have completed phase1
+
+			s2.P(); // Wait for phase2 to be available
+
+			// Test if it is the thread's turn
+			while (!turnTestAndSet()){
+				s2.V(); // Not it's turn and will notify another thread to test
+				System.out.println("Thread: " + this.iTID + " has attempted but waiting for its turn to finish PHASE II.");
+				s2.P(); // Wait for phase 2 to be available again
+			}
+
+			phase2();
+				
+			s2.V(); // Release the lock for phase2
+
 			System.out.println("ReleaseBlock thread [TID=" + this.iTID + "] terminates.");
+
+			// Print message if all threads have completed phase2
+			phase2Counter++;
+			if (phase2Counter == 10) {
+				System.out.println("--------------All the threads have finished PHASE II.--------------");
+			}
 		}
 	} // class ReleaseBlock
 
 
 	/**
 	 * Inner class CharStackProber to dump stack contents.
+	 * Modified: use semaphore s2 to ensure that threads start in the order of their TID
 	 */
 	static class CharStackProber extends BaseThread
 	{
 		public void run()
 		{
-			mutex.P();
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			phase1();
 
 
@@ -325,24 +362,37 @@ public class BlockManager5
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V();
+				mutex.V(); // Release the lock for phase1
+
+				// Print message if all threads have completed phase1
+				phase1Counter++;
+				if (phase1Counter == 10) {
+					System.out.println("--------------All the threads have finished PHASE I.--------------");
+				}
 			}
-			s1.V();
-			s1.P();
-			s1.V();
-			s2.P();
+
+			s1.V(); //Increment s1
+			s1.P(); // Wait for thread to be available for phase2
+			s1.V(); // All threads have completed phase1
+
+			s2.P(); // Wait for phase2 to be available
+
+			// Test if it is the thread's turn
 			while (!turnTestAndSet()){
-				s2.V();
-				System.out.println("thread: "+ this.iTID + " has attempted but waiting for its turn to finish PHASE II");
-				s2.P();
-			}
-			try{
-				phase2();
-			}finally {
-				s2.V();
+				s2.V(); // Not it's turn and will notify another thread to test
+				System.out.println("Thread: " + this.iTID + " has attempted but waiting for its turn to finish PHASE II.");
+				s2.P(); // Wait for phase 2 to be available again
 			}
 
+			phase2();
+				
+			s2.V(); // Release the lock for phase2
 
+			// Print message if all threads have completed phase2
+			phase2Counter++;
+			if (phase2Counter == 10) {
+				System.out.println("--------------All the threads have finished PHASE II.--------------");
+			}
 		}
 	} // class CharStackProber
 

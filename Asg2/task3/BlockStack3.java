@@ -38,7 +38,7 @@ class BlockStack3
 	/**
 	 * stack[0:5] with four defined values
 	 */
-	public char acStack[] = new char[] {'a', 'b', 'c', 'd', '*', '*'};
+	private char acStack[] = new char[] {'a', 'b', 'c', 'd', '*', '*'};
 
 	private int stackAccessCounter;
 
@@ -54,9 +54,7 @@ class BlockStack3
 	 */
 	public BlockStack3(final int piSize)
 	{
-
-
-                if(piSize != DEFAULT_SIZE)
+        if(piSize != DEFAULT_SIZE)
 		{
 			this.acStack = new char[piSize];
 
@@ -78,7 +76,6 @@ class BlockStack3
 	 */
 	public char pick()
 	{
-
 		stackAccessCounter++;
 		return this.acStack[this.iTop];
 	}
@@ -89,8 +86,8 @@ class BlockStack3
 	 */
 	public char getAt(final int piPosition) throws StackAccessException {
 		stackAccessCounter++;
-		if(piPosition >= iSize){
-			throw new StackAccessException("Index "+ piPosition +" is out of bounds!!!");
+		if(piPosition >= iSize) {
+			throw new StackAccessException("Index " + piPosition + " is out of bounds !!!");
 		}
 		return this.acStack[piPosition];
 	}
@@ -99,16 +96,15 @@ class BlockStack3
 	 * Standard push operation
 	 */
 	public void push(final char pcBlock) throws StackAccessException {
-
 		stackAccessCounter++;
-		if(isEmpty()){
+		if(isEmpty()) {
 			this.acStack[++this.iTop] = 'a';
-		}else if(iTop < iSize){
+		}else if(iTop < iSize) {
 		this.acStack[++this.iTop] = pcBlock;
 		}else {
-				throw new StackAccessException("Full stack !!!");
+			throw new StackAccessException("Full stack !!!");
 		}
-		System.out.println("pushed successfully");
+		System.out.println("Pushed successfully !!!");
 	}
 
 	/**
@@ -122,22 +118,45 @@ class BlockStack3
 		}
 		char cBlock = this.acStack[this.iTop];
 		this.acStack[this.iTop--] = '*'; // Leave prev. value undefined
-		System.out.println("popped successfully");
+		System.out.println("Popped successfully !!!");
 		return cBlock;
 	}
 
-	public int getITop() {
-		return iTop;
-	}
-
+	/**
+	 * Returns the value of iSize
+	 * @return iSize, int
+	 */
 	public int getISize() {
 		return iSize;
 	}
 
+	/**
+	 * Returns the value of iTop
+	 * @return iTop, int
+	 */
+	public int getITop() {
+		return iTop;
+	}
+
+	/**
+	 * Returns the value of acStack
+	 * @return acStack, char[]
+	 */
+	public char[] getACStack() {
+		return acStack;
+	}
+
+	/**
+	 * Returns whether the stack is empty or not
+	 * @return bool
+	 */
 	public boolean isEmpty() {
 		return (this.iTop == -1);
 	}
 
+	/**
+	 * @return stackAccessCounter, int
+	 */
 	public int getAccessCounter() {
 		return stackAccessCounter;
 	}

@@ -43,6 +43,8 @@ public class BlockManager4
 
 	/**
 	 * s1 is to make sure phase I for all is done before any phase II begins
+	 * Modified: Declare semaphore. Requires 10 V() operations before any thread can 
+	 * being phase2
 	 */
 	private static Semaphore s1 = new Semaphore(-9);
 
@@ -52,6 +54,8 @@ public class BlockManager4
 	 */
 	//private static Semaphore s2 = new Semaphore(...);
 
+	// Added: Keeps track of the number of threads that completed phase1
+	private static int phase1Counter = 0;
 
 	// The main()
 	public static void main(String[] argv)
@@ -145,6 +149,7 @@ public class BlockManager4
 
 	/**
 	 * Inner AcquireBlock thread class.
+	 * Modified: use semaphore s1 to ensure all phase 1 finishes before phase 2
 	 */
 	static class AcquireBlock extends BaseThread
 	{
@@ -156,7 +161,7 @@ public class BlockManager4
 
 		public void run()
 		{
-			mutex.P(); // Wait if any thread is executing the critical section
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			System.out.println("AcquireBlock thread [TID=" + this.iTID + "] starts executing.");
 
 
@@ -193,14 +198,22 @@ public class BlockManager4
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V(); // Release the lock
+				mutex.V(); // Release the lock for phase1
+				
+				// Print message if all threads have completed phase1
+				phase1Counter++;
+				if (phase1Counter == 10) {
+					System.out.println("--------------All the threads have finished PHASE I.--------------");
+				}
 			}
 
-			s1.V();
-			s1.P();
-			s1.V();
+			s1.V(); //Increment s1
+			s1.P(); // Wait for thread to be available for phase2
+			//s1.V(); // Release the lock for phase2
+
 			phase2();
 
+			s1.V(); // Release the lock for phase2
 
 			System.out.println("AcquireBlock thread [TID=" + this.iTID + "] terminates.");
 		}
@@ -209,6 +222,7 @@ public class BlockManager4
 
 	/**
 	 * Inner class ReleaseBlock.
+	 * Modified: use semaphore s1 to ensure all phase 1 finishes before phase 2
 	 */
 	static class ReleaseBlock extends BaseThread
 	{
@@ -219,7 +233,7 @@ public class BlockManager4
 
 		public void run()
 		{
-			mutex.P();
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			System.out.println("ReleaseBlock thread [TID=" + this.iTID + "] starts executing.");
 
 
@@ -257,12 +271,22 @@ public class BlockManager4
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V();
+				mutex.V(); // Release the lock for phase1
+
+				// Print message if all threads have completed phase1
+				phase1Counter++;
+				if (phase1Counter == 10) {
+					System.out.println("--------------All the threads have finished PHASE I.--------------");
+				}
 			}
-			s1.V();
-			s1.P();
-			s1.V();
+
+			s1.V(); //Increment s1
+			s1.P(); // Wait for thread to be available for phase2
+			//s1.V(); // Release the lock for phase2
+
 			phase2();
+
+			s1.V(); // Release the lock for phase2
 
 			System.out.println("ReleaseBlock thread [TID=" + this.iTID + "] terminates.");
 		}
@@ -271,12 +295,13 @@ public class BlockManager4
 
 	/**
 	 * Inner class CharStackProber to dump stack contents.
+	 * Modified: use semaphore s1 to ensure all phase 1 finishes before phase 2
 	 */
 	static class CharStackProber extends BaseThread
 	{
 		public void run()
 		{
-			mutex.P();
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			phase1();
 
 
@@ -305,12 +330,22 @@ public class BlockManager4
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V();
+				mutex.V();  // Release the lock for phase1
+
+				// Print message if all threads have completed phase1
+				phase1Counter++;
+				if (phase1Counter == 10) {
+					System.out.println("--------------All the threads have finished PHASE I.--------------");
+				}
 			}
-			s1.V();
-			s1.P();
-			s1.V();
+
+			s1.V(); //Increment s1
+			s1.P(); // Wait for thread to be available for phase2
+			//s1.V(); // Release the lock for phase2
+
 			phase2();
+
+			s1.V(); // Release the lock for phase2
 
 		}
 	} // class CharStackProber

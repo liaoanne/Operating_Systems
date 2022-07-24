@@ -34,6 +34,7 @@ public class BlockManager3
 
 	/**
 	 * For atomicity
+	 * Modified: declare semaphore
 	 */
 	private static Semaphore mutex = new Semaphore(1);
 
@@ -145,6 +146,7 @@ public class BlockManager3
 
 	/**
 	 * Inner AcquireBlock thread class.
+	 * Modified: use semaphore to make critical section atomic
 	 */
 	static class AcquireBlock extends BaseThread
 	{
@@ -156,7 +158,7 @@ public class BlockManager3
 
 		public void run()
 		{
-			mutex.P(); // Wait if any thread is executing the critical section
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			System.out.println("AcquireBlock thread [TID=" + this.iTID + "] starts executing.");
 
 
@@ -193,7 +195,7 @@ public class BlockManager3
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V(); // Release the lock
+				mutex.V(); // Release the lock for phase1
 			}
 
 			phase2();
@@ -206,6 +208,7 @@ public class BlockManager3
 
 	/**
 	 * Inner class ReleaseBlock.
+	 * Modified: use semaphore to make critical section atomic
 	 */
 	static class ReleaseBlock extends BaseThread
 	{
@@ -216,7 +219,7 @@ public class BlockManager3
 
 		public void run()
 		{
-			mutex.P();
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			System.out.println("ReleaseBlock thread [TID=" + this.iTID + "] starts executing.");
 
 
@@ -254,7 +257,7 @@ public class BlockManager3
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V();
+				mutex.V(); // Release the lock for phase1
 			}
 
 
@@ -268,12 +271,13 @@ public class BlockManager3
 
 	/**
 	 * Inner class CharStackProber to dump stack contents.
+	 * Modified: use semaphore to make critical section atomic
 	 */
 	static class CharStackProber extends BaseThread
 	{
 		public void run()
 		{
-			mutex.P();
+			mutex.P(); // Wait if any thread is executing the critical section, phase1
 			phase1();
 
 
@@ -302,7 +306,7 @@ public class BlockManager3
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V();
+				mutex.V(); // Release the lock for phase1
 			}
 
 

@@ -38,6 +38,9 @@ class BlockStack1
 	 */
 	public char acStack[] = new char[] {'a', 'b', 'c', 'd', '*', '*'};
 
+	/**
+	 * Added: Keeps track of how many times the stack has been accessed
+	 */
 	private int stackAccessCounter;
 
 	/**
@@ -52,9 +55,7 @@ class BlockStack1
 	 */
 	public BlockStack1(final int piSize)
 	{
-
-
-                if(piSize != DEFAULT_SIZE)
+        if(piSize != DEFAULT_SIZE)
 		{
 			this.acStack = new char[piSize];
 
@@ -73,31 +74,32 @@ class BlockStack1
 	/**
 	 * Picks a value from the top without modifying the stack
 	 * @return top element of the stack, char
+	 * Modified: add stackAccessCounter
 	 */
 	public char pick()
 	{
-
-		stackAccessCounter++;
+		stackAccessCounter++; //added
 		return this.acStack[this.iTop];
 	}
 
 	/**
 	 * Returns arbitrary value from the stack array
 	 * @return the element, char
+	 * Modified: add stackAccessCounter
 	 */
 	public char getAt(final int piPosition)
 	{
-		stackAccessCounter++;
+		stackAccessCounter++; //added
 		return this.acStack[piPosition];
 	}
 
 	/**
 	 * Standard push operation
+	 * Modified: add stackAccessCounter
 	 */
 	public void push(final char pcBlock)
 	{
-
-		stackAccessCounter++;
+		stackAccessCounter++; //added
 		this.acStack[++this.iTop] = pcBlock;
 		System.out.println("pushed successfully");
 	}
@@ -105,29 +107,45 @@ class BlockStack1
 	/**
 	 * Standard pop operation
 	 * @return ex-top element of the stack, char
+	 * Modified: add stackAccessCounter
 	 */
 	public char pop()
 	{
-		stackAccessCounter++;
+		stackAccessCounter++; //added
 		char cBlock = this.acStack[this.iTop];
 		this.acStack[this.iTop--] = '*'; // Leave prev. value undefined
 		System.out.println("popped successfully");
 		return cBlock;
 	}
 
-	public int getITop() {
-
-		return iTop;
-	}
-
+	/**
+	 * Added: Returns the value of iSize
+	 * @return iSize, int
+	 */
 	public int getISize() {
 		return iSize;
 	}
 
+	/**
+	 * Added: Returns the value of iTop
+	 * @return iTop, int
+	 */
+	public int getITop() {
+		return iTop;
+	}
+
+	/**
+	 * Added: Returns whether the stack is empty or not
+	 * @return bool
+	 */
 	public boolean isEmpty() {
 		return (this.iTop == -1);
 	}
 
+	/**
+	 * Added: Returns the value of the stackAccessCounter
+	 * @return stackAccessCounter, int
+	 */
 	public int getAccessCounter() {
 		return stackAccessCounter;
 	}
