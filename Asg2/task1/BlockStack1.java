@@ -101,7 +101,7 @@ class BlockStack1
 	{
 		stackAccessCounter++; //added
 		this.acStack[++this.iTop] = pcBlock;
-		System.out.println("pushed successfully");
+		System.out.println("Pushed successfully !!!");
 	}
 
 	/**
@@ -114,7 +114,7 @@ class BlockStack1
 		stackAccessCounter++; //added
 		char cBlock = this.acStack[this.iTop];
 		this.acStack[this.iTop--] = '*'; // Leave prev. value undefined
-		System.out.println("popped successfully");
+		System.out.println("Popped successfully !!!");
 		return cBlock;
 	}
 

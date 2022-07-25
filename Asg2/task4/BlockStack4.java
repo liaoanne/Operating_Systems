@@ -74,9 +74,11 @@ class BlockStack4
 	 * Picks a value from the top without modifying the stack
 	 * @return top element of the stack, char
 	 */
-	public char pick()
-	{
+	public char pick() throws StackAccessException {
 		stackAccessCounter++;
+		if (isEmpty()) {
+			throw new StackAccessException("Empty stack !!!");
+		}
 		return this.acStack[this.iTop];
 	}
 
@@ -99,8 +101,8 @@ class BlockStack4
 		stackAccessCounter++;
 		if(isEmpty()) {
 			this.acStack[++this.iTop] = 'a';
-		}else if(iTop < iSize) {
-		this.acStack[++this.iTop] = pcBlock;
+		}else if(iTop < iSize - 1) {
+			this.acStack[++this.iTop] = pcBlock;
 		}else {
 			throw new StackAccessException("Full stack !!!");
 		}

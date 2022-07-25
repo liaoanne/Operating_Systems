@@ -3,6 +3,7 @@ package task3;
 
 import common.BaseThread;
 import common.Semaphore;
+import common.StackAccessException;
 
 /**
  * Class BlockManager
@@ -133,7 +134,7 @@ public class BlockManager3
 			System.err.println("Caught InterruptedException (internal error): " + e.getMessage());
 			e.printStackTrace(System.err);
 		}
-		catch(Exception e)
+		catch(StackAccessException e)
 		{
 			reportException(e);
 		}
@@ -190,7 +191,7 @@ public class BlockManager3
 					soStack.pick() + "."
 				);
 			}
-			catch(Exception e)
+			catch(StackAccessException e)
 			{
 				reportException(e);
 				System.exit(1);
@@ -252,7 +253,7 @@ public class BlockManager3
 					soStack.pick() + "."
 				);
 			}
-			catch(Exception e)
+			catch(StackAccessException e)
 			{
 				reportException(e);
 				System.exit(1);
@@ -301,7 +302,7 @@ public class BlockManager3
 
 				}
 			}
-			catch(Exception e)
+			catch(StackAccessException e)
 			{
 				reportException(e);
 				System.exit(1);
