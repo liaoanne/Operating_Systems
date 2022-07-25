@@ -131,7 +131,7 @@ public class BlockManager2
 			System.err.println("Caught InterruptedException (internal error): " + e.getMessage());
 			e.printStackTrace(System.err);
 		}
-		catch(StackAccessException e)
+		catch(Exception e)
 		{
 			reportException(e);
 		}
@@ -186,7 +186,7 @@ public class BlockManager2
 					soStack.pick() + "."
 				);
 			}
-			catch(StackAccessException e)
+			catch(Exception e)
 			{
 				reportException(e);
 				System.exit(1);
@@ -244,7 +244,7 @@ public class BlockManager2
 					soStack.pick() + "."
 				);
 			}
-			catch(StackAccessException e)
+			catch(Exception e)
 			{
 				reportException(e);
 				System.exit(1);
@@ -289,7 +289,7 @@ public class BlockManager2
 
 				}
 			}
-			catch(StackAccessException e)
+			catch(Exception e)
 			{
 				reportException(e);
 				System.exit(1);

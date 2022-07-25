@@ -139,7 +139,7 @@ public class BlockManager5
 			System.err.println("Caught InterruptedException (internal error): " + e.getMessage());
 			e.printStackTrace(System.err);
 		}
-		catch(StackAccessException e)
+		catch(Exception e)
 		{
 			reportException(e);
 		}
@@ -196,18 +196,18 @@ public class BlockManager5
 					soStack.pick() + "."
 				);
 			}
-			catch(StackAccessException e)
+			catch(Exception e)
 			{
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V(); // Release the lock for phase1
-
 				// Print message if all threads have completed phase1
 				phase1Counter++;
 				if (phase1Counter == 10) {
 					System.out.println("--------------All the threads have finished PHASE I.--------------");
 				}
+				
+				mutex.V(); // Release the lock for phase1
 			}
 
 			s1.V(); //Increment s1
@@ -225,15 +225,15 @@ public class BlockManager5
 
 			phase2();
 				
-			s2.V(); // Release the lock for phase2
-
-			System.out.println("AcquireBlock thread [TID=" + this.iTID + "] terminates.");
-
 			// Print message if all threads have completed phase2
 			phase2Counter++;
 			if (phase2Counter == 10) {
 				System.out.println("--------------All the threads have finished PHASE II.--------------");
 			}
+			
+			s2.V(); // Release the lock for phase2
+
+			System.out.println("AcquireBlock thread [TID=" + this.iTID + "] terminates.");
 		}
 	} // class AcquireBlock
 
@@ -284,18 +284,18 @@ public class BlockManager5
 					soStack.pick() + "."
 				);
 			}
-			catch(StackAccessException e)
+			catch(Exception e)
 			{
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V(); // Release the lock for phase1
-
 				// Print message if all threads have completed phase1
 				phase1Counter++;
 				if (phase1Counter == 10) {
 					System.out.println("--------------All the threads have finished PHASE I.--------------");
 				}
+				
+				mutex.V(); // Release the lock for phase1
 			}
 
 			s1.V(); //Increment s1
@@ -313,15 +313,15 @@ public class BlockManager5
 
 			phase2();
 				
-			s2.V(); // Release the lock for phase2
-
-			System.out.println("ReleaseBlock thread [TID=" + this.iTID + "] terminates.");
-
 			// Print message if all threads have completed phase2
 			phase2Counter++;
 			if (phase2Counter == 10) {
 				System.out.println("--------------All the threads have finished PHASE II.--------------");
 			}
+			
+			s2.V(); // Release the lock for phase2
+
+			System.out.println("ReleaseBlock thread [TID=" + this.iTID + "] terminates.");
 		}
 	} // class ReleaseBlock
 
@@ -363,13 +363,13 @@ public class BlockManager5
 				reportException(e);
 				System.exit(1);
 			}finally {
-				mutex.V(); // Release the lock for phase1
-
 				// Print message if all threads have completed phase1
 				phase1Counter++;
 				if (phase1Counter == 10) {
 					System.out.println("--------------All the threads have finished PHASE I.--------------");
 				}
+				
+				mutex.V(); // Release the lock for phase1
 			}
 
 			s1.V(); //Increment s1
@@ -386,14 +386,14 @@ public class BlockManager5
 			}
 
 			phase2();
-				
-			s2.V(); // Release the lock for phase2
-
+			
 			// Print message if all threads have completed phase2
 			phase2Counter++;
 			if (phase2Counter == 10) {
 				System.out.println("--------------All the threads have finished PHASE II.--------------");
 			}
+			
+			s2.V(); // Release the lock for phase2
 		}
 	} // class CharStackProber
 
