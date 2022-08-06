@@ -1,0 +1,12 @@
+We think that it would be possible to modify Task 2 so that the number 
+of philosophers can be changed randomly in the middle of the task. 
+However, this would be a very involved task as there are many considerations 
+that make it difficult to implement. 
+
+For example, if we stop the threads in the middle of the task to add or 
+remove philosophers, it could make the shared variable values unpredictable 
+when the task resumes. As well, the Thread.stop method is depreciated so 
+we would need to implement our own Thread. stop method. This would require 
+that a thread consistently checks whether they have been removed or not. 
+If they are removed, we would need to remove them from any waiting queues 
+as well as notifyAll to release all of it's resources so deadlock does not occur.
